@@ -1,9 +1,6 @@
 {% extends 'header.html' %}
 {% block extrastyle %}
 <style>
-    .row {
-        display:flex;
-    }
     .featured{
         color:rgb(0, 0, 0); 
         padding: .25rem;
@@ -19,6 +16,8 @@
         flex-direction: row;
         margin-left: auto;
         margin-right: auto;
+        margin-top: 2rem;
+        margin-bottom: 2rem;
     }
     .box img{
         display: flex;
@@ -42,40 +41,43 @@
     {% else %}   
         <form action="{% url 'edit' exhibit.exhibit_id %}" method="POST">
     {% endif %} 
-        
-        <div class="row">
+    <frameset cols="150, *">
+        <frame>
             {% csrf_token %} 
-            <div style="display: inline-block; width: auto;">
-                {{ form.as_p }}
-                {% if action == 'create' %}
+                    {{ form.as_p }}
+                    {% if action == 'create' %}
                     <a href="{% url 'createImage' %}"><input type="button"  value="Add Image" /></a>
-                {% else %}
+                    {% else %}
                     <a href="{% url 'addImage' %}"><input type="button"  value="Add Image" /></a>
-                {% endif %}
-                
-                {% if action == 'create' %}
+                    {% endif %}
+                    
+                    {% if action == 'create' %}
                     <input type="submit" name="create" value="Create" />
-                {% else %}
+                    {% else %}
                     <input type="submit" name="save" value="Save" /><input type="submit" name="delete" value="Delete" />
-                {% endif %}
-            </div>
-            <div class="box">
-                {% if action == "edit" %}
-                    {% for image in exhibit.pics.all %}
-                        <a href="{% url 'creatEImage' image.image_id %}" style="text-decoration: none;">
-                            <div style="display: block;  padding: 5rem;">
-                                {% if image.featured %}
-                                    <span class="featured"><i>Featured Image</i></span>
-                                {% endif %}
-                                <br><img src="{{ image.url }}"/><br>
-                                <label>{{ image.name }}</label>
-                            </div>
-                        </a>
-                    {% endfor %}
-                {% endif %}
-
+                    {% endif %}
+            </form>
+            <frame>
+                <div class="box">
+                    {% if action == "edit" %}
+                        {% for image in exhibit.pics.all %}
+                            <a href="{% url 'creatEImage' image.image_id %}" style="text-decoration: none;">
+                                <div style="display: block;  padding: 5rem;">
+                                    {% if image.featured %}
+                                        <span class="featured"><i>Featured Image</i></span>
+                                    {% endif %}
+                                    <br><img src="{{ image.url }}"/><br>
+                                    <label>{{ image.name }}</label>
+                                </div>
+                            </a>
+                        {% endfor %}
+                    {% endif %}
+                </div>
                 {% if images != null %}
-                    {% for image in images %}
+                    <hr>
+                    <h3 style="text-align: center; color: #0000ff">New Works</h3>
+                    <div class="box">
+                        {% for image in images %}
                             <a href="{% url 'creatEImage' image.image_id  %}">
                                 <div style="display: block; margin-top: .3rem; margin-bottom: .3rem;">
 
@@ -86,10 +88,9 @@
                                     <label>{{ image.name }}</label>
                                 </div>
                             </a>
-                    {% endfor %}
+                        {% endfor %}
+                    </div>
                 {% endif %}
-            </div>
+            </frame>
         </div>
-    </form>
-    
 {% endblock %}
